@@ -1,7 +1,16 @@
-use axum::{Router, routing::get};
+use axum::{Json, Router, routing::get};
+use serde::Serialize;
 
-async fn get_foo() -> String {
-    "orders".to_string()
+#[derive(Serialize)]
+struct Order {
+    owner: String,
+}
+
+async fn get_foo() -> Json<Order> {
+    let order = Order {
+        owner: String::from("Lucciano"),
+    };
+    Json(order)
 }
 
 pub fn orders_routes() -> Router {
