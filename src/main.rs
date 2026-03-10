@@ -1,16 +1,30 @@
 use axum::{Router, routing::get};
-mod controllers;
+use sqlx::postgres::PgPoolOptions;
+use sqlx::{Pool, Postgres};
 
+mod controllers;
 use controllers::inventory::inventory_routes;
 use controllers::orders::orders_routes;
 
+async fn database_connection() -> Result<Pool<Postgres>, sqlx::Error> {
+    let pool = PgPoolOptions::new()
+        .max_connections(5)
+        .connect(
+            "postgresql://postgres.jhlasmhscmscolxkayvd:19467381Abc.@aws-1-us-east-1.pooler.supabase.com:5432/postgres"
+        )
+        .await?;
+
+    Ok(pool)
+}
+
 #[tokio::main]
 async fn main() {
-    // build our application with a single route
+    let pool = database_connection().await.unwrap();
 
     let api_routes = Router::new()
         .nest("/inventory", inventory_routes())
-        .nest("/orders", orders_routes());
+        .nest("/orders", orders_routes())
+        .with_state(pool);
 
     let app = Router::new()
         .route("/", get(|| async { "Welcome to my Axum API!" }))
