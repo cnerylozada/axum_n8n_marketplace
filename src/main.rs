@@ -2,9 +2,8 @@ use axum::{Router, routing::get};
 use sqlx::postgres::PgPoolOptions;
 use sqlx::{Pool, Postgres};
 
-mod controllers;
-use controllers::inventory::inventory_routes;
-use controllers::orders::orders_routes;
+mod inventory;
+use inventory::routes::inventory_routes;
 
 async fn database_connection() -> Result<Pool<Postgres>, sqlx::Error> {
     let pool = PgPoolOptions::new()
@@ -23,7 +22,6 @@ async fn main() {
 
     let api_routes = Router::new()
         .nest("/inventory", inventory_routes())
-        .nest("/orders", orders_routes())
         .with_state(pool);
 
     let app = Router::new()
