@@ -21,7 +21,7 @@ async fn main() {
     let pool = database_connection().await.unwrap();
 
     let api_routes = Router::new()
-        .nest("/inventory", inventory_routes())
+        .nest("/inventory_variants", inventory_routes())
         .with_state(pool);
 
     let app = Router::new()

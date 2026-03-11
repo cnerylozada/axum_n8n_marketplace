@@ -3,8 +3,9 @@ use sqlx::FromRow;
 use uuid::Uuid;
 
 #[derive(Serialize, FromRow)]
-pub struct User {
+pub struct InventoryVariant {
     id: Uuid,
-    name: String,
-    age: i64,
+    product_name: String,
+    size: String,
+    stock_quantity: i32,
 }
