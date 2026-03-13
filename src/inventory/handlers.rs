@@ -1,6 +1,10 @@
-use crate::inventory::models::InventoryVariant;
-use axum::{Json, extract::State};
-use sqlx::{Pool, Postgres};
+use crate::inventory::models::{InventoryVariant, UpdateStockPayload};
+use axum::{
+    Json,
+    extract::{Path, State},
+};
+use sqlx::{Pool, Postgres, types::Uuid};
+use validator::Validate;
 
 pub async fn get_inventory(
     State(pool): State<Pool<Postgres>>,
@@ -20,4 +24,15 @@ pub async fn get_inventory(
         .map_err(|error| error.to_string())?;
 
     Ok(Json(inventory_variant_list))
+}
+
+pub async fn update_inventory(
+    State(pool): State<Pool<Postgres>>,
+    Path(raw_product_id): Path<String>,
+    Json(payload): Json<UpdateStockPayload>,
+) -> Result<(), String> {
+    let product_id = Uuid::parse_str(&raw_product_id).map_err(|error| error.to_string())?;
+    payload.validate().map_err(|error| error.to_string())?;
+
+    Ok(())
 }
