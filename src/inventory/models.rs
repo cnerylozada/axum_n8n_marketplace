@@ -15,7 +15,7 @@ pub struct InventoryVariant {
 #[serde(deny_unknown_fields)]
 pub struct UpdateStockPayload {
     #[validate(range(min = 0, max = 5))]
-    stock_quantity: i32,
+    pub stock_quantity: i32,
     #[validate(length(min = 2, max = 4))]
-    size: String,
+    pub size: String,
 }
