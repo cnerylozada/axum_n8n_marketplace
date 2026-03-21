@@ -6,7 +6,7 @@ use axum::{
 use sqlx::{Pool, Postgres, types::Uuid};
 use validator::Validate;
 
-pub async fn get_inventory(
+pub async fn get_inventory_list(
     State(pool): State<Pool<Postgres>>,
 ) -> Result<Json<Vec<InventoryVariant>>, String> {
     let query = r#"

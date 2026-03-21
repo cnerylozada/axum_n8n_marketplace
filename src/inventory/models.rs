@@ -16,6 +16,6 @@ pub struct InventoryVariant {
 pub struct UpdateStockPayload {
     #[validate(range(min = 0, max = 5))]
     pub stock_quantity: i32,
-    #[validate(length(min = 2, max = 4))]
+    #[validate(length(min = 1, max = 2))]
     pub size: String,
 }
