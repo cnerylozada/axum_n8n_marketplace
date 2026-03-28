@@ -37,8 +37,9 @@ pub async fn update_inventory(
     let query = r#"
         UPDATE inventory_variants
         SET stock_quantity = $1
-        WHERE product_id = $2 AND size = $3
+        WHERE id = $2 AND size = $3
     "#;
+
     let result = sqlx::query(query)
         .bind(payload.stock_quantity)
         .bind(product_id)
