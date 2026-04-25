@@ -1,0 +1,31 @@
+use chrono::{DateTime, Utc};
+use serde::Serialize;
+use sqlx::FromRow;
+use uuid::Uuid;
+
+#[derive(Serialize, FromRow)]
+pub struct Employee {
+    pub id: Uuid,
+    pub name: String,
+    pub email: String,
+    pub is_available: bool,
+    pub days_off_allowance: i32,
+    pub days_off_used: i32,
+    pub created_at: DateTime<Utc>,
+}
+
+#[derive(Serialize)]
+pub enum Status {
+    pending,
+    approved,
+    rejected,
+}
+
+#[derive(Serialize)]
+pub struct TimeOffRequest {
+    pub reason: String,
+    pub status: Status,
+    pub days: u8,
+    pub start_date: DateTime<Utc>,
+    pub finish_date: DateTime<Utc>,
+}
