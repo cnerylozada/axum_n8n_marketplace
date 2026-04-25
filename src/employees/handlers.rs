@@ -1,6 +1,5 @@
-use crate::employees::models::{Employee, Status, TimeOffRequest};
+use crate::employees::models::{Employee, TimeOffRequest};
 use axum::{Json, extract::State};
-use chrono::{Duration, Utc};
 use sqlx::{Pool, Postgres};
 
 pub async fn get_employee_list(
@@ -17,8 +16,16 @@ pub async fn get_employee_list(
     Ok(Json(employee_list))
 }
 
-pub async fn get_time_off_request_by_employee() -> Result<Json<Vec<TimeOffRequest>>, String> {
-    let items = vec![];
+pub async fn get_time_off_request_by_employee(
+    State(pool): State<Pool<Postgres>>,
+) -> Result<Json<Vec<TimeOffRequest>>, String> {
+    let query = r#"
+        SELECT * FROM time_off_requests
+    "#;
+    let items = sqlx::query_as::<_, TimeOffRequest>(query)
+        .fetch_all(&pool)
+        .await
+        .map_err(|error| error.to_string())?;
 
     Ok(Json(items))
 }
