@@ -18,13 +18,7 @@ pub async fn get_employee_list(
 }
 
 pub async fn get_time_off_request_by_employee() -> Result<Json<Vec<TimeOffRequest>>, String> {
-    let items = vec![TimeOffRequest {
-        reason: String::from("xxx"),
-        status: Status::pending,
-        days: 7,
-        start_date: Utc::now(),
-        finish_date: Utc::now() + Duration::days(2),
-    }];
+    let items = vec![];
 
     Ok(Json(items))
 }

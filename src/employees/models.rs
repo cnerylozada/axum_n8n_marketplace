@@ -23,9 +23,11 @@ pub enum Status {
 
 #[derive(Serialize)]
 pub struct TimeOffRequest {
+    pub id: Uuid,
+    pub employee_id: Uuid,
     pub reason: String,
     pub status: Status,
-    pub days: u8,
+    pub days: i32,
     pub start_date: DateTime<Utc>,
     pub finish_date: DateTime<Utc>,
 }
