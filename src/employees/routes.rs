@@ -1,7 +1,7 @@
-use crate::employees::handlers::{create_time_off_request, get_employee_list, get_time_off_list};
+use crate::employees::handlers::{create_time_off_request, get_employee_list, get_time_off_list, update_time_off_request_status};
 use axum::{
     Router,
-    routing::{get, post},
+    routing::{get, patch, post},
 };
 use sqlx::{Pool, Postgres};
 
@@ -12,5 +12,9 @@ pub fn employees_routes() -> Router<Pool<Postgres>> {
         .route(
             "/{employee_id}/time_off_requests",
             post(create_time_off_request),
+        )
+        .route(
+            "/{employee_id}/time_off_requests/{request_id}",
+            patch(update_time_off_request_status),
         )
 }

@@ -1,4 +1,6 @@
-use crate::employees::models::{CreateTimeOffRequestPayload, Employee, TimeOffRequest};
+use crate::employees::models::{
+    CreateTimeOffRequestPayload, Employee, TimeOffRequest, UpdateTimeOffStatusPayload,
+};
 use axum::{
     Json,
     extract::{Path, State},
@@ -31,6 +33,34 @@ pub async fn get_time_off_list(
         .map_err(|error| error.to_string())?;
 
     Ok(Json(items))
+}
+
+pub async fn update_time_off_request_status(
+    State(pool): State<Pool<Postgres>>,
+    Path((raw_employee_id, raw_request_id)): Path<(String, String)>,
+    Json(payload): Json<UpdateTimeOffStatusPayload>,
+) -> Result<(), String> {
+    let employee_id = Uuid::parse_str(&raw_employee_id).map_err(|error| error.to_string())?;
+    let request_id = Uuid::parse_str(&raw_request_id).map_err(|error| error.to_string())?;
+
+    let query = r#"
+        UPDATE time_off_requests
+        SET status = $1
+        WHERE id = $2 AND employee_id = $3
+    "#;
+    let result = sqlx::query(query)
+        .bind(payload.status)
+        .bind(request_id)
+        .bind(employee_id)
+        .execute(&pool)
+        .await
+        .map_err(|error| error.to_string())?;
+
+    if result.rows_affected() == 0 {
+        Err("No rows were updated".to_string())
+    } else {
+        Ok(())
+    }
 }
 
 pub async fn create_time_off_request(

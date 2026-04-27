@@ -14,7 +14,7 @@ pub struct Employee {
     pub created_at: DateTime<Utc>,
 }
 
-#[derive(Serialize, Type)]
+#[derive(Serialize, Deserialize, Type)]
 #[sqlx(type_name = "time_off_status")]
 pub enum Status {
     pending,
@@ -39,4 +39,9 @@ pub struct CreateTimeOffRequestPayload {
     pub days: i32,
     pub start_date: DateTime<Utc>,
     pub finish_date: DateTime<Utc>,
+}
+
+#[derive(Deserialize)]
+pub struct UpdateTimeOffStatusPayload {
+    pub status: Status,
 }
