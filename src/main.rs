@@ -8,11 +8,10 @@ use employees::routes::employees_routes;
 use inventory::routes::inventory_routes;
 
 async fn database_connection() -> Result<Pool<Postgres>, sqlx::Error> {
+    let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let pool = PgPoolOptions::new()
         .max_connections(5)
-        .connect(
-            "postgresql://postgres.jhlasmhscmscolxkayvd:19467381Abc.@aws-1-us-east-1.pooler.supabase.com:5432/postgres"
-        )
+        .connect(&database_url)
         .await?;
 
     Ok(pool)
@@ -20,6 +19,7 @@ async fn database_connection() -> Result<Pool<Postgres>, sqlx::Error> {
 
 #[tokio::main]
 async fn main() {
+    dotenvy::dotenv().ok();
     let pool = database_connection().await.unwrap();
 
     let api_routes = Router::new()
