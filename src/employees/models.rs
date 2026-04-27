@@ -1,5 +1,5 @@
 use chrono::{DateTime, Utc};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use sqlx::{FromRow, Type};
 use uuid::Uuid;
 
@@ -28,6 +28,14 @@ pub struct TimeOffRequest {
     pub employee_id: Uuid,
     pub reason: String,
     pub status: Status,
+    pub days: i32,
+    pub start_date: DateTime<Utc>,
+    pub finish_date: DateTime<Utc>,
+}
+
+#[derive(Deserialize)]
+pub struct CreateTimeOffRequestPayload {
+    pub reason: String,
     pub days: i32,
     pub start_date: DateTime<Utc>,
     pub finish_date: DateTime<Utc>,
